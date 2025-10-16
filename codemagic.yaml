@@ -1,16 +1,45 @@
 workflows:
-  android-workflow:
+  botsguied-android:
     name: BotsGuied Android Build
+    max_build_duration: 60
     environment:
       flutter: stable
+      xcode: latest
       groups:
-        - default
+        - google_credentials
+      vars:
+        PACKAGE_NAME: "com.botsguied.app"
+
     scripts:
-      - name: Install dependencies
+      - name: Clean old builds
+        script: |
+          flutter clean
+
+      - name: Get dependencies
         script: |
           flutter pub get
+
+      - name: Verify Flutter & Dart versions
+        script: |
+          flutter --version
+          dart --version
+
+      - name: Decode Firebase config (if any)
+        script: |
+          if [ -f "android/app/google-services.json" ]; then
+            echo "Firebase google-services.json found ✅"
+          else
+            echo "⚠️ Missing google-services.json in android/app/"
+          fi
+
       - name: Build release APK
         script: |
           flutter build apk --release
+
     artifacts:
-      - build/app/outputs/flutter-apk/
+      - build/app/outputs/flutter-apk/app-release.apk
+
+    publishing:
+      email:
+        recipients:
+          - your@email.com  # Replace with your email to get the download link
