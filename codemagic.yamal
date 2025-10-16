@@ -1,7 +1,0 @@
-workflows:
-  default-workflow:
-    name: Default workflow
-    scripts:
-      - echo "Building app..."
-    artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
