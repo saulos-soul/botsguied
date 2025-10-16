@@ -4,7 +4,6 @@ workflows:
     max_build_duration: 60
     environment:
       flutter: stable
-      xcode: latest
       groups:
         - google_credentials
       vars:
@@ -32,9 +31,20 @@ workflows:
             echo "⚠️ Missing google-services.json in android/app/"
           fi
 
+      - name: Find main.dart
+        script: |
+          # Search for main.dart in the repo
+          MAIN_FILE=$(find . -name "main.dart" | head -n 1)
+          if [ -z "$MAIN_FILE" ]; then
+            echo "❌ main.dart not found!"
+            exit 1
+          else
+            echo "Found main.dart at $MAIN_FILE ✅"
+          fi
+
       - name: Build release APK
         script: |
-          flutter build apk --release --target=lib/main.dart
+          flutter build apk --release --target=$MAIN_FILE
 
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
@@ -42,4 +52,4 @@ workflows:
     publishing:
       email:
         recipients:
-          - your@email.com  # Replace with your email to get the download link
+          - your@email.com  # Replace with your email
