@@ -34,7 +34,7 @@ workflows:
 
       - name: Build release APK
         script: 
-       flutter build apk--release--target=lib/main.dart
+       flutter build apk --release --target=lib/main.dart
 
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
